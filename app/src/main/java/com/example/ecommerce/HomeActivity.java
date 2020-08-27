@@ -183,9 +183,10 @@ implements NavigationView.OnNavigationItemSelectedListener
             startActivity(intent);
 
         }
-        else if (id == R.id.nav_order)
+        else if (id == R.id.nav_search)
         {
-
+            Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
+            startActivity(intent);
         }
         else if (id == R.id.nav_categories)
         {
