@@ -1,4 +1,4 @@
-package com.example.ecommerce;
+package com.example.ecommerce.Buyers;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.ecommerce.Admin.AdminCategoryActivity;
 import com.example.ecommerce.Model.Users;
 import com.example.ecommerce.Prevalest.Prevalest;
+import com.example.ecommerce.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

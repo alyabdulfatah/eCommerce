@@ -1,4 +1,4 @@
-package com.example.ecommerce;
+package com.example.ecommerce.Buyers;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,14 +6,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ecommerce.Model.Users;
 import com.example.ecommerce.Prevalest.Prevalest;
+import com.example.ecommerce.R;
+import com.example.ecommerce.Seller.SellerHomeActivity;
+import com.example.ecommerce.Seller.SellerRegistrationActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button joinNewButton,loginButton;
     private ProgressDialog loadingBar;
+    private TextView sellerBegin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +41,27 @@ public class MainActivity extends AppCompatActivity {
 
         joinNewButton = (Button)findViewById(R.id.main_join_now_btn);
         loginButton = (Button)findViewById(R.id.main_login_btn);
+        sellerBegin = (TextView) findViewById(R.id.seller_begin);
 
         Paper.init(this);
         loadingBar = new ProgressDialog(this);
 
 
+        sellerBegin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(MainActivity.this, SellerRegistrationActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(MainActivity.this,LoginActivity.class);
+                Intent intent= new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -50,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         joinNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(MainActivity.this,RegisterActivity.class);
+                Intent intent= new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -70,8 +89,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (firebaseUser != null)
+        {
+            Intent intent = new Intent(MainActivity.this, SellerHomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void AllowAccess(final String phone, final String password)

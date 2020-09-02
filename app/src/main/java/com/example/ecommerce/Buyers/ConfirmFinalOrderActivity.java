@@ -1,4 +1,4 @@
-package com.example.ecommerce;
+package com.example.ecommerce.Buyers;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,11 +12,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ecommerce.Prevalest.Prevalest;
+import com.example.ecommerce.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.rey.material.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -123,7 +123,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                                 {
                                     Toast.makeText(ConfirmFinalOrderActivity.this,"your final order has been placed successfully.",Toast.LENGTH_LONG).show();
 
-                                    Intent intent= new Intent(ConfirmFinalOrderActivity.this,HomeActivity.class);
+                                    Intent intent= new Intent(ConfirmFinalOrderActivity.this, HomeActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                     finish();

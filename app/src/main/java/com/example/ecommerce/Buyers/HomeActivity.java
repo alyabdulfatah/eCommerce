@@ -1,4 +1,4 @@
-package com.example.ecommerce;
+package com.example.ecommerce.Buyers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.ecommerce.Model.Products;
 import com.example.ecommerce.Prevalest.Prevalest;
+import com.example.ecommerce.R;
 import com.example.ecommerce.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -112,7 +113,7 @@ implements NavigationView.OnNavigationItemSelectedListener
                             public void onClick(View view)
                             {
 
-                                Intent intent = new Intent(HomeActivity.this,ProductDatailsActivity.class);
+                                Intent intent = new Intent(HomeActivity.this, ProductDatailsActivity.class);
                                 intent.putExtra("pid",model.getPid());
                                 startActivity(intent);
 
@@ -194,13 +195,13 @@ implements NavigationView.OnNavigationItemSelectedListener
         }
         else if (id == R.id.nav_settings)
         {
-            Intent intent = new Intent(HomeActivity.this,SettinsActivity.class);
+            Intent intent = new Intent(HomeActivity.this, SettinsActivity.class);
             startActivity(intent);
         }
         else if (id == R.id.nav_logout)
         {
             Paper.book().destroy();
-            Intent intent = new Intent(HomeActivity.this,MainActivity.class);
+            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
