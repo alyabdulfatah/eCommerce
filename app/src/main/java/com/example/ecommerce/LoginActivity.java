@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.ecommerce.Admin.AdminCategoryActivity;
 import com.example.ecommerce.Model.Users;
 import com.example.ecommerce.Prevalest.Prevalest;
 import com.google.firebase.database.DataSnapshot;
@@ -28,12 +29,15 @@ public class LoginActivity extends AppCompatActivity {
     private EditText InputPhoneNumber, InputPassword;
     private Button LoginButton;
     private ProgressDialog loadingBar;
-    private CheckBox checkBoxRememberMe;
-    private TextView AdminLink,NotAdminLink;
+    private TextView AdminLink, NotAdminLink, ForgetPasswordLink;
 
     private String parentDbName = "Users";
+    private CheckBox chkBoxRememberMe;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -41,46 +45,61 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton = (Button) findViewById(R.id.login_btn);
         InputPassword = (EditText) findViewById(R.id.login_password_input);
         InputPhoneNumber = (EditText) findViewById(R.id.login_phone_number_input);
+        AdminLink = (TextView) findViewById(R.id.admin_panel_link);
+        NotAdminLink = (TextView) findViewById(R.id.not_admin_panel_link);
+        ForgetPasswordLink = findViewById(R.id.forget_password_link);
+        loadingBar = new ProgressDialog(this);
 
-        checkBoxRememberMe=(CheckBox)findViewById(R.id.remember_me_chkb);
+
+        chkBoxRememberMe = (CheckBox) findViewById(R.id.remember_me_chkb);
         Paper.init(this);
 
-        AdminLink =(TextView)findViewById(R.id.admin_panel_link);
-        NotAdminLink =(TextView)findViewById(R.id.not_admin_panel_link);
-
-
-        loadingBar = new ProgressDialog(this);
 
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 LoginUser();
             }
         });
+
+        ForgetPasswordLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+                intent.putExtra("check", "login");
+                startActivity(intent);
+            }
+        });
+
         AdminLink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 LoginButton.setText("Login Admin");
                 AdminLink.setVisibility(View.INVISIBLE);
                 NotAdminLink.setVisibility(View.VISIBLE);
-                parentDbName="Admins";
+                parentDbName = "Admins";
             }
         });
+
         NotAdminLink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 LoginButton.setText("Login");
                 AdminLink.setVisibility(View.VISIBLE);
                 NotAdminLink.setVisibility(View.INVISIBLE);
                 parentDbName = "Users";
-
             }
         });
-
     }
 
-    private void LoginUser() {
+
+
+    private void LoginUser()
+    {
         String phone = InputPhoneNumber.getText().toString();
         String password = InputPassword.getText().toString();
 
@@ -95,39 +114,45 @@ public class LoginActivity extends AppCompatActivity {
         else
         {
             loadingBar.setTitle("Login Account");
-            loadingBar.setMessage("Please wait, while we are checking the login.");
+            loadingBar.setMessage("Please wait, while we are checking the credentials.");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
-            AlowAccessToAccount(phone, password);
-    }
-}
 
-    private void AlowAccessToAccount(final String phone, final String password) {
 
-        if (checkBoxRememberMe.isChecked())
-        {
-            Paper.book().write(Prevalest.UserPhoneKey,phone);
-            Paper.book().write(Prevalest.UserPasswordKey,password);
+            AllowAccessToAccount(phone, password);
         }
+    }
+
+
+
+    private void AllowAccessToAccount(final String phone, final String password)
+    {
+        if(chkBoxRememberMe.isChecked())
+        {
+            Paper.book().write(Prevalest.UserPhoneKey, phone);
+            Paper.book().write(Prevalest.UserPasswordKey, password);
+        }
+
 
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
 
+
         RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if (snapshot.child(parentDbName).child(phone).exists())
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if (dataSnapshot.child(parentDbName).child(phone).exists())
                 {
-                    Users usersData = snapshot.child(parentDbName).child(phone).getValue(Users.class);
+                    Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
+
                     if (usersData.getPhone().equals(phone))
                     {
                         if (usersData.getPassword().equals(password))
                         {
                             if (parentDbName.equals("Admins"))
                             {
-                                Toast.makeText(LoginActivity.this,
-                                        "Welcome Admin you Logged in Successfully.....",Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "Welcome Admin, you are logged in Successfully...", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 
                                 Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
@@ -135,8 +160,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             else if (parentDbName.equals("Users"))
                             {
-                                Toast.makeText(LoginActivity.this,
-                                        "Logged in Successfully.....",Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "logged in Successfully...", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
 
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -147,29 +171,21 @@ public class LoginActivity extends AppCompatActivity {
                         else
                         {
                             loadingBar.dismiss();
-                            Toast.makeText(LoginActivity.this,
-                                    "Password is incorrect",Toast.LENGTH_LONG).show();
-
+                            Toast.makeText(LoginActivity.this, "Password is incorrect.", Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 }
                 else
                 {
-                    Toast.makeText(LoginActivity.this,
-                            "Account with this"+phone+" number do not exist",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Account with this " + phone + " number do not exists.", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
-                    Toast.makeText(LoginActivity.this,
-                            "You need to create a new Account",Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-
     }
 }
